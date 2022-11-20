@@ -6,18 +6,20 @@
 
 # Pterodactyl Wings
 
-# Install
-```
-mkdir -p /etc/pterodactyl
-curl -L -o /usr/local/bin/wings "https://github.com/codding-nepale/wings/releases/download/v1.7.2/wings_linux_$([[ "$(uname -m)" == "x86_64" ]] && echo "amd64" || echo "arm64")"
-chmod u+x /usr/local/bin/wings
-```
 Wings is Pterodactyl's server control plane, built for the rapidly changing gaming industry and designed to be
 highly performant and secure. Wings provides an HTTP API allowing you to interface directly with running server
 instances, fetch server logs, generate backups, and control all aspects of the server lifecycle.
 
 In addition, Wings ships with a built-in SFTP server allowing your system to remain free of Pterodactyl specific
 dependencies, and allowing users to authenticate with the same credentials they would normally use to access the Panel.
+
+## Install
+
+```
+mkdir -p /etc/pterodactyl
+curl -L -o /usr/local/bin/wings "https://github.com/codding-nepale/wings/releases/download/v1.7.2/wings_linux_$([[ "$(uname -m)" == "x86_64" ]] && echo "amd64" || echo "arm64")"
+chmod u+x /usr/local/bin/wings
+```
 
 ## Sponsors
 I would like to extend my sincere thanks to the following sponsors for helping find Pterodactyl's developement.
