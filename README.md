@@ -34,7 +34,7 @@ In order for the power buttons to work on the panel you just need to make some m
 
 ## Support
 
-
+If you need help contact me on discord : 𝐶𝛳𝐷𝐼𝛱𝐺'𝛱𝛴𝑃𝛥𝐿𝛴#1656
 
 ## Sponsors
 I would like to extend my sincere thanks to the following sponsors for helping find Pterodactyl's developement.
