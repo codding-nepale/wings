@@ -232,5 +232,3 @@ In same file above </script> add :
             });
         });
     });
-
-If you need help contact me on discord : https://discord.pinous-heberg.com
