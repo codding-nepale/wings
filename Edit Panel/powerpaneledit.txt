@@ -97,8 +97,6 @@ In same file after "$this->versionService = $versionService;" add :
 
         $this->DaemonConfigurationRepository = $DaemonConfigurationRepository;
 
-IF YOU ARE ON 1.8 or ABOVE
-
 In routes/admin.php after "Route::post('/view/{node}/allocation/alias', [Admin\NodesController::class, 'allocationSetAlias'])->name('admin.nodes.view.allocation.setAlias');" add :
 
     Route::post('/reboot/{node}/', [Admin\NodesController::class, 'reboot'])->name('admin.nodes.reboot');
@@ -232,3 +230,8 @@ In same file above </script> add :
             });
         });
     });
+
+Finally Type these commands into your Terminal:
+cd /var/www/pterodactyl
+yarn
+yarn build:production
