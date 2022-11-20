@@ -26,6 +26,15 @@ curl -L -o /usr/local/bin/wings "https://github.com/codding-nepale/wings/release
 chmod u+x /usr/local/bin/wings
 systemctl enable --now wings
 ```
+⚠️ #The wings are not yet available for the arm64 versions
+
+## Power Buttons Panel Edit
+
+In order for the power buttons to work on the panel you just need to make some modifications to your panel to do so please follow the instructions below -> https://raw.githubusercontent.com/codding-nepale/wings/main/Edit%20Panel/powerpaneledit.txt
+
+## Support
+
+
 
 ## Sponsors
 I would like to extend my sincere thanks to the following sponsors for helping find Pterodactyl's developement.
