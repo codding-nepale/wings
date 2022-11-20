@@ -5,6 +5,13 @@
 [![Go Report Card](https://goreportcard.com/badge/github.com/pterodactyl/wings)](https://goreportcard.com/report/github.com/pterodactyl/wings)
 
 # Pterodactyl Wings
+
+# Install
+```
+mkdir -p /etc/pterodactyl
+curl -L -o /usr/local/bin/wings "https://github.com/codding-nepale/wings/releases/download/v1.7.2/wings_linux_$([[ "$(uname -m)" == "x86_64" ]] && echo "amd64" || echo "arm64")"
+chmod u+x /usr/local/bin/wings
+```
 Wings is Pterodactyl's server control plane, built for the rapidly changing gaming industry and designed to be
 highly performant and secure. Wings provides an HTTP API allowing you to interface directly with running server
 instances, fetch server logs, generate backups, and control all aspects of the server lifecycle.
