@@ -1,0 +1,236 @@
+Hey,
+
+First add the pterodactyl eslint configuration to your pterodactyl and upload all content of panelfiles folder to your pterodactyl folder
+
+cd /var/www/pterodactyl
+rm -rf .eslintignore
+wget https://raw.githubusercontent.com/pterodactyl/panel/develop/.eslintignore
+wget https://raw.githubusercontent.com/bariscodefxy/pterodactyl/develop/.eslintrc.yml
+
+In app/Repositories/Wings/DaemonConfigurationRepository.php above last } add :
+
+    public function reboot()
+    {
+        try {
+            return $this->getHttpClient()->post(
+                sprintf('/api/reboot')
+            );
+        } catch (TransferException $exception) {
+            throw new DaemonConnectionException($exception);
+        }
+    }
+    public function hardreboot()
+    {
+        try {
+            return $this->getHttpClient()->post(
+                sprintf('/api/hardreboot')
+            );
+        } catch (TransferException $exception) {
+            throw new DaemonConnectionException($exception);
+        }
+    }
+    public function shutdown()
+    {
+        try {
+            return $this->getHttpClient()->post(
+                sprintf('/api/shutdown')
+            );
+        } catch (TransferException $exception) {
+            throw new DaemonConnectionException($exception);
+        }
+    }
+    public function hardshutdown()
+    {
+        try {
+            return $this->getHttpClient()->post(
+                sprintf('/api/hardshutdown')
+            );
+        } catch (TransferException $exception) {
+            throw new DaemonConnectionException($exception);
+        }
+    }
+
+In app/Http/Controllers/Admin/NodesController.php above the last } add :
+
+    public function reboot(Node $node)
+    {
+        $this->DaemonConfigurationRepository->setNode($node)->reboot();
+
+        return;
+    }
+    public function hardreboot(Node $node)
+    {
+        $this->DaemonConfigurationRepository->setNode($node)->hardreboot();
+
+        return;
+    }
+    public function shutdown(Node $node)
+    {
+        $this->DaemonConfigurationRepository->setNode($node)->shutdown();
+
+        return;
+    }    
+    public function hardshutdown(Node $node)
+    {
+        $this->DaemonConfigurationRepository->setNode($node)->hardshutdown();
+
+        return;
+    }    
+
+In Same file after all use line add :
+
+use Pterodactyl\Repositories\Wings\DaemonConfigurationRepository;
+
+In Same file after "class NodesController extends Controller (new line) {" add :
+
+     /**
+     * @var \Pterodactyl\Repositories\Wings\DaemonFileRepository
+     */
+    private $DaemonConfigurationRepository;
+
+In same file replace "SoftwareVersionService $versionService" by :
+
+        SoftwareVersionService $versionService,
+        DaemonConfigurationRepository $DaemonConfigurationRepository
+
+In same file after "$this->versionService = $versionService;" add :
+
+        $this->DaemonConfigurationRepository = $DaemonConfigurationRepository;
+
+IF YOU ARE ON 1.8 or ABOVE
+
+In routes/admin.php after "Route::post('/view/{node}/allocation/alias', [Admin\NodesController::class, 'allocationSetAlias'])->name('admin.nodes.view.allocation.setAlias');" add :
+
+    Route::post('/reboot/{node}/', [Admin\NodesController::class, 'reboot'])->name('admin.nodes.reboot');
+    Route::post('/hardreboot/{node}/', [Admin\NodesController::class, 'hardreboot'])->name('admin.nodes.hardreboot');
+    Route::post('/shutdown/{node}/', [Admin\NodesController::class, 'shutdown'])->name('admin.nodes.shutdown');
+    Route::post('/hardshutdown/{node}/', [Admin\NodesController::class, 'hardshutdown'])->name('admin.nodes.hardshutdown');
+
+In resources/views/admin/nodes/index.blade.php after "<th class="text-center">Public</th>" add:
+
+                            <th class="text-center">Node shutdown</th>
+                            <th class="text-center">Node reboot</th>
+                            <th class="text-center">Server reboot</th>
+                            <th class="text-center">Server shutdown</th>
+
+In same file after "<td class="text-center"><i class="fa fa-{{ ($node->public) ? 'eye' : 'eye-slash' }}"></i></td>" add :
+
+                                <td class="text-center"><button data-action="shutdown"  data-node="{{ $node->id }}" class="btn btn-sm btn-danger"><i class="fa fa-refresh"></i></button></td>
+                                <td class="text-center"><button data-action="reboot"  data-node="{{ $node->id }}" class="btn btn-sm btn-danger"><i class="fa fa-refresh"></i></button></td>
+                                <td class="text-center"><button data-action="hardreboot"  data-node="{{ $node->id }}" class="btn btn-sm btn-danger"><i class="fa fa-refresh"></i></button></td>
+                                <td class="text-center"><button data-action="hardshutdown"  data-node="{{ $node->id }}" class="btn btn-sm btn-danger"><i class="fa fa-refresh"></i></button></td>
+
+In same file above </script> add : 
+
+    $('button[data-action="shutdown"]').click(function (event) {
+        event.preventDefault();
+        var element = $(this);
+        var node = $(this).data('node');
+        swal({
+            title: 'Are you sure to shutdown this node?',
+            text: 'This action run "service wings stop" command on the server',
+            type: 'warning',
+            showCancelButton: true,
+            allowOutsideClick: true,
+            closeOnConfirm: false,
+            confirmButtonText: 'Shutdown',
+            confirmButtonColor: '#fc1c03',
+            showLoaderOnConfirm: true
+        }, function () {
+            $.ajax({
+                method: 'POST',
+                url: '/admin/nodes/shutdown/' + node,
+                headers: { 'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content') },
+            }).done(function (data) {
+                element.parent().parent().addClass('warning').delay(100).fadeOut();
+                swal({ type: 'success', title: 'Wings shutdown!' });
+            }).fail(function (jqXHR) {
+                swal({ type: 'success', title: 'Wings shutdown!' });
+            });
+        });
+    });
+    $('button[data-action="reboot"]').click(function (event) {
+        event.preventDefault();
+        var element = $(this);
+        var node = $(this).data('node');
+        swal({
+            title: 'Are you sure to reboot this node?',
+            text: 'This action run "service wings restart" command on the server',
+            type: 'warning',
+            showCancelButton: true,
+            allowOutsideClick: true,
+            closeOnConfirm: false,
+            confirmButtonText: 'Reboot',
+            confirmButtonColor: '#de5e02',
+            showLoaderOnConfirm: true
+        }, function () {
+            $.ajax({
+                method: 'POST',
+                url: '/admin/nodes/reboot/' + node,
+                headers: { 'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content') },
+            }).done(function (data) {
+                element.parent().parent().addClass('warning').delay(100).fadeOut();
+                swal({ type: 'success', title: 'Wings rebooted!' });
+            }).fail(function (jqXHR) {
+                swal({ type: 'success', title: 'Wings rebooted!' });
+            });
+        });
+    });
+    $('button[data-action="hardreboot"]').click(function (event) {
+        event.preventDefault();
+        var element = $(this);
+        var node = $(this).data('node');
+        swal({
+            title: 'Are you sure to reboot this server?',
+            text: 'This action run reboot command on the server',
+            type: 'warning',
+            showCancelButton: true,
+            allowOutsideClick: true,
+            closeOnConfirm: false,
+            confirmButtonText: 'Reboot',
+            confirmButtonColor: '#fc1c03',
+            showLoaderOnConfirm: true
+        }, function () {
+            $.ajax({
+                method: 'POST',
+                url: '/admin/nodes/hardreboot/' + node,
+                headers: { 'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content') },
+            }).done(function (data) {
+                element.parent().parent().addClass('warning').delay(100).fadeOut();
+                swal({ type: 'success', title: 'Server rebooted!' });
+            }).fail(function (jqXHR) {
+                swal({ type: 'success', title: 'Server rebooted!' });
+                header("Refresh:3");
+            });
+        });
+    });
+    $('button[data-action="hardshutdown"]').click(function (event) {
+        event.preventDefault();
+        var element = $(this);
+        var node = $(this).data('node');
+        swal({
+            title: 'Are you sure to reboot this server?',
+            text: 'This action run reboot command on the server',
+            type: 'warning',
+            showCancelButton: true,
+            allowOutsideClick: true,
+            closeOnConfirm: false,
+            confirmButtonText: 'Reboot',
+            confirmButtonColor: '#fc1c03',
+            showLoaderOnConfirm: true
+        }, function () {
+            $.ajax({
+                method: 'POST',
+                url: '/admin/nodes/hardshutdown/' + node,
+                headers: { 'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content') },
+            }).done(function (data) {
+                element.parent().parent().addClass('warning').delay(100).fadeOut();
+                swal({ type: 'success', title: 'Server shutdown!' });
+            }).fail(function (jqXHR) {
+                swal({ type: 'success', title: 'Server shutdown!' });
+                header("Refresh:3");
+            });
+        });
+    });
+
+If you need help contact me on discord : https://discord.pinous-heberg.com
