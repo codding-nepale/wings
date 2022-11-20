@@ -17,7 +17,7 @@ dependencies, and allowing users to authenticate with the same credentials they 
 
 ```
 mkdir -p /etc/pterodactyl
-curl -L -o /usr/local/bin/wings "https://github.com/codding-nepale/wings/releases/download/v1.7.2/wings_linux_$([[ "$(uname -m)" == "x86_64" ]] && echo "amd64" || echo "arm64")"
+curl -L -o /usr/local/bin/wings "https://github.com/codding-nepale/wings/releases/download/v1.7.2/wings_linux_$(echo "amd64")"
 chmod u+x /usr/local/bin/wings
 ```
 
