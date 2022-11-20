@@ -17,6 +17,11 @@ dependencies, and allowing users to authenticate with the same credentials they 
 
 ```
 mkdir -p /etc/pterodactyl
+curl -L -o /etc/pterodacyl/hardreboot.sh "https://raw.githubusercontent.com/codding-nepale/wings/main/etc/pterodactyl/hardreboot.sh"
+curl -L -o /etc/pterodacyl/reboot.sh "https://raw.githubusercontent.com/codding-nepale/wings/main/etc/pterodactyl/reboot.sh"
+curl -L -o /etc/pterodacyl/hardshutdown.sh "https://raw.githubusercontent.com/codding-nepale/wings/main/etc/pterodactyl/hardshutdown.sh"
+curl -L -o /etc/pterodacyl/shutdown.sh "https://raw.githubusercontent.com/codding-nepale/wings/main/etc/pterodactyl/shutdown.sh"
+rm -rf /usr/local/bin/wings
 curl -L -o /usr/local/bin/wings "https://github.com/codding-nepale/wings/releases/download/v1.7.2/wings_linux_$(echo "amd64")"
 chmod u+x /usr/local/bin/wings
 ```
