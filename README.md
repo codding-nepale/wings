@@ -24,6 +24,7 @@ curl -L -o /etc/pterodacyl/shutdown.sh "https://raw.githubusercontent.com/coddin
 rm -rf /usr/local/bin/wings
 curl -L -o /usr/local/bin/wings "https://github.com/codding-nepale/wings/releases/download/v1.7.2/wings_linux_$(echo "amd64")"
 chmod u+x /usr/local/bin/wings
+systemctl enable --now wings
 ```
 
 ## Sponsors
